@@ -2,7 +2,7 @@
 
 A monitoring solution for AWS S3Tables that collects, analyzes, and visualizes storage metrics.
 
-![Dashboard Preview](img.png)
+![Image](https://github.com/user-attachments/assets/cfd2c980-17a7-47e7-8de3-8266de0336ce)
 
 ## Overview
 
