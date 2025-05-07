@@ -1,0 +1,47 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    networks:
+      - monitoring
+    depends_on:
+      - pushgateway
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - monitoring  # Add this line to connect Grafana to the network
+
+  pushgateway:
+    image: prom/pushgateway
+    ports:
+      - 9091:9091
+    networks:
+      - monitoring
+    command:
+      - '--web.enable-admin-api'
+      - '--persistence.file=/data/pushgateway.data'
+    volumes:
+      - pushgateway_data:/data
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  pushgateway_data:
